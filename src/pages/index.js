@@ -1,94 +1,78 @@
 import React from 'react';
-import { Link, graphql } from 'gatsby';
-import Img from 'gatsby-image';
+import { graphql } from 'gatsby';
 import Layout from '../components/layout';
+import { sectionsGenerator } from '../utils';
 
 const IndexPage = ({ data }) => {
+  const sectionsData = data?.allDatoCmsLandingPage?.edges[0]?.node?.sections;
 
-  console.log('data > ', data)
+  console.log('sectionsData', sectionsData)
+
+  const sectionsComponents = sectionsGenerator(sectionsData);
 
   return (
     <Layout>
-      <h1>Abraham Chang Portfolio</h1>
-      <p>Hi, this will be my first portfolio page.</p>
+      {sectionsComponents}
     </Layout>
   )
 }
 
 export default IndexPage;
 
-// export const query = graphql`
-//   query IndexPage {
-//       landingPage {
-//         sections {
-//           ... on AboutRecord {
-//             id
-//           }
-//           ... on ExperienceRecord {
-//             id
-//           }
-//           ... on EducationRecord {
-//             id
-//           }
-//           ... on ProjectRecord {
-//             id
-//           }
-//           ... on IntroRecord {
-//             id
-//           }
-//         }
-//       }
-//     }
-// `
-
-// import React from 'react'
-// import { Link, graphql } from 'gatsby'
-// import Masonry from 'react-masonry-component'
-// import Img from 'gatsby-image'
-// import Layout from "../components/layout"
-
-// const IndexPage = ({ data }) => (
-//   <Layout>
-//     <Masonry className="showcase">
-//       {data.allDatoCmsWork.edges.map(({ node: work }) => (
-//         <div key={work.id} className="showcase__item">
-//           <figure className="card">
-//             <Link to={`/works/${work.slug}`} className="card__image">
-//               <Img fluid={work.coverImage.fluid} />
-//             </Link>
-//             <figcaption className="card__caption">
-//               <h6 className="card__title">
-//                 <Link to={`/works/${work.slug}`}>{work.title}</Link>
-//               </h6>
-//               <div className="card__description">
-//                 <p>{work.excerpt}</p>
-//               </div>
-//             </figcaption>
-//           </figure>
-//         </div>
-//       ))}
-//     </Masonry>
-//   </Layout>
-// )
-
-// export default IndexPage
-
-// export const query = graphql`
-//   query IndexQuery {
-//     allDatoCmsWork(sort: { fields: [position], order: ASC }) {
-//       edges {
-//         node {
-//           id
-//           title
-//           slug
-//           excerpt
-//           coverImage {
-//             fluid(maxWidth: 450, imgixParams: { fm: "jpg", auto: "compress" }) {
-//               ...GatsbyDatoCmsSizes
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// `
+export const query = graphql`
+  query IndexQuery {
+    allDatoCmsLandingPage {
+      edges {
+        node {
+          sections {
+            ... on DatoCmsAbout {
+              id
+              name
+              location
+              phone
+              email
+              description
+            }
+            ... on DatoCmsExperience {
+              id
+              company
+              title
+              employmentType
+              location
+              startDate
+              endDate
+              description
+            }
+            ... on DatoCmsEducation {
+              id
+              school
+              startDate
+              endDate
+              fieldOfStudy
+              degree
+              description
+            }
+            ... on DatoCmsProject {
+              id
+              title
+              description
+              images {
+                url
+                title
+              }
+            }
+            ... on DatoCmsIntro {
+              id
+              title
+              excerpt
+              bgImage {
+                url
+                title
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

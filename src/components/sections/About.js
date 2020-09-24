@@ -1,11 +1,19 @@
 import React from 'react';
 
-const About = (props) => {
-    console.log('props mi pana', props)
+const About = ({
+    id,
+    name,
+    location,
+    phone,
+    email,
+    description,
+}) => {
     return (
-        <div>
-            About
-        </div>
+        <section id={id}>
+            <h1>{name}</h1>
+            <h3>{`${location} | +${phone} | ${email}`}</h3>
+            <p>{description}</p>
+        </section>
     );
 };
 
